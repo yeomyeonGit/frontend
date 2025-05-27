@@ -30,10 +30,10 @@ RUN npm run build
 
 # 서빙을 위한 node serve 설치
 # 빌드된 것을 옮겨주는 작업
-RUN npm build -g serve
+RUN npm install -g serve
 EXPOSE 3000
 
-CMD ["serve", "-s", "build", "-1", "3000"]
+CMD ["serve", "-s", "build", "-l", "3000"]
 
 
 # 이미지를 만드려면 베이스이미지가 필요하다
