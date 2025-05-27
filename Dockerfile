@@ -26,7 +26,6 @@ WORKDIR /front
 # package.json과 lock 파일 복사 및 의존성 설치
 COPY package*.json ./
 RUN npm install
-RUN npm axios
 # 앱 소스 전체 복사
 COPY . .
 
