@@ -31,7 +31,7 @@ RUN npm run build
 # 빌드된 것을 옮겨주는 작업
 RUN npm build -g serve
 WORKDIR /front
-COPY --from=build /front/build ./build
+COPY /front/build ./build
 EXPOSE 3000
 
 CMD ["serve", "-s", "build", "-1", "3000"]
