@@ -21,6 +21,7 @@
 # git-action dockerfile
 # 베이스 이미지 pull. vm을 가져 오기
 FROM node:20
+WORKDIR /front
 COPY package*.json ./
 RUN npm install
 COPY . .
@@ -30,8 +31,6 @@ RUN npm run build
 # 서빙을 위한 node serve 설치
 # 빌드된 것을 옮겨주는 작업
 RUN npm build -g serve
-WORKDIR /front
-COPY /front/build ./build
 EXPOSE 3000
 
 CMD ["serve", "-s", "build", "-1", "3000"]
