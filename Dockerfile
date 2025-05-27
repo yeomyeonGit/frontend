@@ -18,7 +18,7 @@
 # # 클라우드 환경에 보낼 거라면 이 명령어가 필요 없다
 
 
-FROM node:20
+FROM node:18
 
 # 작업 디렉토리 설정
 WORKDIR /front
