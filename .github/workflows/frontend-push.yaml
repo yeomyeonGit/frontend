@@ -4,27 +4,55 @@ on:
   push:
     branches: ["main"]
 
+# jobs:
+#   build:
+#     # 운영체제 설치
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: checkout code
+#         uses: actions/checkout@v3
+
+#       - name: docker build    # docker desktop 깐 느림
+#         uses: docker/setup-buildx-action@v3
+      
+#       - name: docker login    # hub에 로그인
+#         uses: docker/login-action@v3    # 버전 확인 잘 하기
+#         with:
+#           username: ${{ secrets.DOCKERHUB_USERNAME }}   # docker 사용자명
+#           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+#       # 1. 이미지 생성
+#       - name: image build and push
+#         uses: docker/build-push-action@v3
+#         with:
+#           context: .
+#           push: true
+#           tags: ${{ secrets.DOCKERHUB_USERNAME }}/siat-action-frontend:latest
+
+
+# gitaction aws s3       
 jobs:
-  build:
-    # 운영체제 설치
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: docker build    # docker desktop 깐 느림
-        uses: docker/setup-buildx-action@v3
-      
-      - name: docker login    # hub에 로그인
-        uses: docker/login-action@v3    # 버전 확인 잘 하기
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}   # docker 사용자명
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build React app using Docker
+        run: |
+          docker build -t react-app-builder .
+          docker create --name temp-container react-app-builder
+          docker cp temp-container:/front/build ./build
+          docker rm temp-container
 
-      # 1. 이미지 생성
-      - name: image build and push
-        uses: docker/build-push-action@v3
+      - name: Upload to S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
         with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/siat-action-frontend:latest
+          args: --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_DIR: "./build"  

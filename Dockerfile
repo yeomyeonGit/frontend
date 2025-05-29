@@ -32,11 +32,11 @@ COPY . .
 # 앱 빌드
 RUN npm run build
 
-# 정적 파일 서빙 도구 설치
-RUN npm install -g serve
+# # 정적 파일 서빙 도구 설치
+# RUN npm install -g serve
 
-# 포트 오픈
-EXPOSE 3000
+# # 포트 오픈
+# EXPOSE 3000
 
-# 앱 실행 (정적 파일 서빙)
-CMD ["serve", "-s", "build", "-l", "3000"]
+# # 앱 실행 (정적 파일 서빙)
+# CMD ["serve", "-s", "build", "-l", "3000"]
